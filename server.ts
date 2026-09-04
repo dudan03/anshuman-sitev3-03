@@ -26,15 +26,31 @@ async function startServer() {
     try {
       const { messages } = req.body;
       
-      const formattedHistory = messages.slice(0, -1).map((m: any) => ({
+      let formattedHistory = messages.slice(0, -1).map((m: any) => ({
         role: m.role === "assistant" ? "model" : "user",
         parts: [{ text: m.content }]
       }));
+
+      // Gemini API requires history to start with a 'user' role
+      while (formattedHistory.length > 0 && formattedHistory[0].role === "model") {
+        formattedHistory.shift();
+      }
+
+      // Ensure strictly alternating roles (user, model, user, model...)
+      const validHistory = [];
+      let expectedRole = "user";
+      for (const msg of formattedHistory) {
+        if (msg.role === expectedRole) {
+          validHistory.push(msg);
+          expectedRole = expectedRole === "user" ? "model" : "user";
+        }
+      }
+
       const latestMessage = messages[messages.length - 1].content;
 
       const chat = ai.chats.create({
-        model: "gemini-3.8-flash",
-        history: formattedHistory,
+        model: "gemini-2.5-flash",
+        history: validHistory,
         config: {
           systemInstruction: `You are an AI assistant for Dudan Technology Pvt Ltd and its founder Anshuman Parida.
           Dudan Technology Pvt Ltd specializes in Custom Chatbot AI App Development, Custom Applications, and Custom Website Development.
