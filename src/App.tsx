@@ -35,6 +35,7 @@ import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls, Float, Stars, Html, useTexture } from "@react-three/drei";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Chatbot } from "./components/Chatbot";
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // --- CONFIGURATION ---
 const VIDEO_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_115001_bcdaa3b4-03de-47e7-ad63-ae3e392c32d4.mp4";
@@ -1615,6 +1616,7 @@ export default function App() {
         </div>
       </footer>
       <Chatbot />
+      <SpeedInsights />
     </div>
   );
 }
